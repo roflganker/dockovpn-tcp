@@ -50,7 +50,7 @@ if [ ! -c /dev/net/tun ]; then
     mknod /dev/net/tun c 10 200
 fi
 
-# Allow UDP traffic on port 1194.
+# Allow TCP traffic on port 1194.
 iptables -A INPUT -i $ADAPTER -p tcp -m state --state NEW,ESTABLISHED --dport 1194 -j ACCEPT
 iptables -A OUTPUT -o $ADAPTER -p tcp -m state --state ESTABLISHED --sport 1194 -j ACCEPT
 
