@@ -1,16 +1,20 @@
-# First run
-# echo HOST_ADDR=$(curl -s https://api.ipify.org) > .env && docker-compose up -d && docker-compose exec -d dockovpn wget -O /doc/Dockovpn/client.ovpn localhost:8080
-
 version: '3'
+
+volumes:
+  dockovpn:
+    driver: local
+
 services:
   dockovpn:
-    image: alekslitvinenk/openvpn
+    restart: unless-stopped
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: my-local-dockovpn
     cap_add:
-        - NET_ADMIN
+      - NET_ADMIN
     ports:
-        - 1194:1194/tcp
-    environment:
-        HOST_ADDR: ${HOST_ADDR}
+      - 0.0.0.0:1194:1194/tcp
+    env_file: .env
     volumes:
-        - ./openvpn_conf:/opt/Dockovpn_data
-    restart: always
+      - dockovpn:/opt/Dockovpn_data
